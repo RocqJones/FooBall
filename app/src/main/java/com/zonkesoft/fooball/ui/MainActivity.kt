@@ -1,4 +1,4 @@
-package com.zonkesoft.fooball
+package com.zonkesoft.fooball.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
