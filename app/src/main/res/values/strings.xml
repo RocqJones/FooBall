@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FooBall</string>
+    <string name="logo">Logo</string>
+    <string name="insights_for_smarter_decisions"># Insights for smarter decisions</string>
 </resources>
