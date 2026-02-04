@@ -1,7 +1,7 @@
 package com.zonkesoft.fooball.di
 
 import com.zonkesoft.fooball.ui.viewmodel.HomeViewModel
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 /**
