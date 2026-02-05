@@ -13,7 +13,8 @@ import org.koin.compose.koinInject
  *
  * @param networkConnectivityObserver The network observer to use (injected by default)
  * @param onlineContent The content to display when the device is connected to the internet
- * @param offlineContent The content to display when the device is not connected (optional)
+ * @param offlineContent The content to display when the device is not connected (optional).
+ *                       If null, a default OfflineContent screen will be displayed.
  */
 @Composable
 fun NetworkAwareContent(
@@ -27,7 +28,13 @@ fun NetworkAwareContent(
 
     when (networkState) {
         is NetworkState.Connected -> onlineContent()
-        is NetworkState.Disconnected -> offlineContent?.invoke()
+        is NetworkState.Disconnected -> {
+            if (offlineContent != null) {
+                offlineContent()
+            } else {
+                OfflineContent()
+            }
+        }
     }
 }
 
