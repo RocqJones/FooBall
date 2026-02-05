@@ -12,7 +12,7 @@
 │  │                 │  │                      │  │   (Example)             │ │
 │  │ - Animations    │  │ - onlineContent      │  │                         │ │
 │  │ - Refresh btn   │  │ - offlineContent     │  │ - Uses NetworkAware     │ │
-│  │ - State display │  │ - loadingContent     │  │ - Shows online/offline  │ │
+│  │ - State display │  │                      │  │ - Shows online/offline  │ │
 │  └────────┬────────┘  └──────────┬───────────┘  └────────────┬────────────┘ │
 │           │                      │                            │              │
 │           │ observes             │ uses                       │ uses         │
