@@ -209,9 +209,7 @@ app/src/main/java/com/zonkesoft/fooball/
     └── AppModules.kt                     ← ViewModel registration
 
 
-Documentation Files:
-├── QUICK_START_GUIDE.md                  ← How to use right now
-├── NETWORK_SERVICE_DOCUMENTATION.md      ← Complete reference
-└── IMPLEMENTATION_SUMMARY.md             ← What was built
-
+Notes:
+- Refer to the project-level documentation (e.g., README or wiki) for setup,
+  architecture details, and implementation summary.
 ```
