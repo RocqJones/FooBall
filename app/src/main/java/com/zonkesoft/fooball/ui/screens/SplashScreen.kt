@@ -62,7 +62,7 @@ fun SplashScreen(navController: NavHostController) {
             SplashContent(isOffline = true)
         },
         loadingContent = {
-            SplashContent(showNetworkCheck = true,)
+            SplashContent(showNetworkCheck = true)
         }
     )
 }
