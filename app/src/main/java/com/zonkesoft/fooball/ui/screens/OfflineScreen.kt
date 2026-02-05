@@ -22,6 +22,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -49,10 +52,14 @@ fun OfflineScreen(
     viewModel: OfflineViewModel = koinViewModel()
 ) {
     val networkState by viewModel.networkState.collectAsState()
+    
+    // Track if navigation has already occurred to prevent duplicate navigations
+    var hasNavigated by remember { mutableStateOf(false) }
 
     // Automatically navigate to HomeScreen when connection is restored
     LaunchedEffect(networkState) {
-        if (networkState is NetworkState.Connected) {
+        if (networkState is NetworkState.Connected && !hasNavigated) {
+            hasNavigated = true
             navController.navigate(Screens.HomeScreen.route) {
                 popUpTo(Screens.OfflineScreen.route) { inclusive = true }
             }
@@ -116,15 +123,7 @@ fun OfflineScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = {
-                    if (networkState is NetworkState.Connected) {
-                        navController.navigate(Screens.HomeScreen.route) {
-                            popUpTo(Screens.OfflineScreen.route) { inclusive = true }
-                        }
-                    } else {
-                        viewModel.checkNetworkState()
-                    }
-                },
+                onClick = { viewModel.checkNetworkState() },
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
                 Icon(
