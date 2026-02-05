@@ -19,6 +19,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -27,23 +28,36 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.zonkesoft.fooball.R
 import com.zonkesoft.fooball.domain.state.NetworkState
 import com.zonkesoft.fooball.ui.components.TextBold
 import com.zonkesoft.fooball.ui.components.TextMedium
 import com.zonkesoft.fooball.ui.components.TextRegular
+import com.zonkesoft.fooball.ui.navigation.Screens
 import com.zonkesoft.fooball.ui.viewmodel.OfflineViewModel
 import org.koin.androidx.compose.koinViewModel
 
 /**
  * Screen displayed when the device is offline.
  * Shows connection status and allows user to refresh/retry.
+ * Automatically navigates to HomeScreen when connection is restored.
  */
 @Composable
 fun OfflineScreen(
+    navController: NavHostController,
     viewModel: OfflineViewModel = koinViewModel()
 ) {
     val networkState by viewModel.networkState.collectAsState()
+
+    // Automatically navigate to HomeScreen when connection is restored
+    LaunchedEffect(networkState) {
+        if (networkState is NetworkState.Connected) {
+            navController.navigate(Screens.HomeScreen.route) {
+                popUpTo(Screens.OfflineScreen.route) { inclusive = true }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -102,7 +116,15 @@ fun OfflineScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = { viewModel.checkNetworkState() },
+                onClick = {
+                    if (networkState is NetworkState.Connected) {
+                        navController.navigate(Screens.HomeScreen.route) {
+                            popUpTo(Screens.OfflineScreen.route) { inclusive = true }
+                        }
+                    } else {
+                        viewModel.checkNetworkState()
+                    }
+                },
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
                 Icon(
@@ -112,7 +134,11 @@ fun OfflineScreen(
                 )
                 Spacer(modifier = Modifier.size(8.dp))
                 TextRegular(
-                    text = stringResource(R.string.retry_connection),
+                    text = if (networkState is NetworkState.Connected) {
+                        stringResource(R.string.continue_button)
+                    } else {
+                        stringResource(R.string.retry_connection)
+                    },
                     fontSize = 16.sp
                 )
             }

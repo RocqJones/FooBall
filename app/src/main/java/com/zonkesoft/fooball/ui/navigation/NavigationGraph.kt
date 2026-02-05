@@ -41,7 +41,7 @@ fun NavigationGraph(
         }
 
         composable(Screens.OfflineScreen.route) {
-            OfflineScreen()
+            OfflineScreen(navController = navController)
         }
     }
 }

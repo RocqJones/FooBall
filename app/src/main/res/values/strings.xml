@@ -8,6 +8,7 @@
     <string name="checking_connection">Checking Connection…</string>
     <string name="refresh">Refresh</string>
     <string name="retry_connection">Retry Connection</string>
+    <string name="continue_button">Continue</string>
     <string name="please_wait_while_we_check_your_connection">Please wait while we check your connection</string>
     <string name="please_check_your_internet_connection_and_try_again">Please check your internet connection and try again</string>
     <string name="your_device_is_now_connected_to_the_internet">Your device is now connected to the internet</string>
