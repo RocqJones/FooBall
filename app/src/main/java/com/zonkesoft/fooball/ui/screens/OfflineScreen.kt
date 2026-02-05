@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.CloudOff
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
@@ -50,7 +51,6 @@ fun OfflineScreen(
 ) {
     val networkState by viewModel.networkState.collectAsState()
 
-    // Automatically navigate to HomeScreen when connection is restored
     LaunchedEffect(networkState) {
         if (networkState is NetworkState.Connected) {
             navController.navigate(Screens.HomeScreen.route) {
@@ -79,7 +79,7 @@ fun OfflineScreen(
                 exit = fadeOut()
             ) {
                 Icon(
-                    imageVector = Icons.Default.Warning,
+                    imageVector = Icons.Default.CloudOff,
                     contentDescription = stringResource(R.string.no_connection),
                     modifier = Modifier.size(80.dp),
                     tint = MaterialTheme.colorScheme.error
@@ -106,7 +106,7 @@ fun OfflineScreen(
                     is NetworkState.Connected -> stringResource(R.string.connected)
                     is NetworkState.Disconnected -> stringResource(R.string.no_internet_connection)
                 },
-                fontSize = 24.sp,
+                fontSize = 18.sp,
                 color = when (networkState) {
                     is NetworkState.Connected -> MaterialTheme.colorScheme.primary
                     is NetworkState.Disconnected -> MaterialTheme.colorScheme.error
@@ -122,7 +122,7 @@ fun OfflineScreen(
                     is NetworkState.Disconnected -> stringResource(R.string.please_check_your_internet_connection_and_try_again)
                 },
                 fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
@@ -146,7 +146,7 @@ fun OfflineScreen(
                     Spacer(modifier = Modifier.size(8.dp))
                     TextRegular(
                         text = stringResource(R.string.retry_connection),
-                        fontSize = 16.sp
+                        fontSize = 14.sp
                     )
                 }
             }

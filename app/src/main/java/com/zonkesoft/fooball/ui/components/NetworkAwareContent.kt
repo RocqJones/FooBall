@@ -11,10 +11,9 @@ import org.koin.compose.koinInject
  * Gets the current network state from the observer.
  */
 private fun NetworkConnectivityObserver.getCurrentState(): NetworkState {
-    return if (isConnected()) {
-        NetworkState.Connected
-    } else {
-        NetworkState.Disconnected
+    return when {
+        isConnected() -> { NetworkState.Connected }
+        else -> { NetworkState.Disconnected }
     }
 }
 
@@ -40,10 +39,9 @@ fun NetworkAwareContent(
     when (networkState) {
         is NetworkState.Connected -> onlineContent()
         is NetworkState.Disconnected -> {
-            if (offlineContent != null) {
-                offlineContent()
-            } else {
-                OfflineContent()
+            when {
+                offlineContent != null -> { offlineContent() }
+                else -> { OfflineContent() }
             }
         }
     }

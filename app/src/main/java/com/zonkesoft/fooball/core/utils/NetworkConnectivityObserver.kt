@@ -46,11 +46,6 @@ class AndroidNetworkConnectivityObserver(
                 trySend(NetworkState.Disconnected)
             }
 
-            override fun onUnavailable() {
-                super.onUnavailable()
-                trySend(NetworkState.Disconnected)
-            }
-
             override fun onCapabilitiesChanged(
                 network: Network,
                 networkCapabilities: NetworkCapabilities
