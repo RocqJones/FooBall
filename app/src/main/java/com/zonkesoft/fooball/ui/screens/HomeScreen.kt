@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,8 +29,7 @@ fun HomeScreen(uiState: HomeUiState, navController: NavHostController) {
                 message = stringResource(R.string.you_re_offline),
                 subMessage = stringResource(R.string.most_of_the_features_will_be_limited_reconnect_and_refresh_to_see_the_content)
             )
-        },
-        loadingContent = { LoadingHomeContent() }
+        }
     )
 }
 
@@ -61,14 +59,3 @@ private fun HomeContent(uiState: HomeUiState) {
     }
 }
 
-@Composable
-private fun LoadingHomeContent() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator(
-            color = MaterialTheme.colorScheme.primary
-        )
-    }
-}

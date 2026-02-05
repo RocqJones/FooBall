@@ -11,25 +11,23 @@ import org.koin.compose.koinInject
  * A composable that observes network connectivity and displays different content
  * based on the connection state.
  *
+ * @param networkConnectivityObserver The network observer to use (injected by default)
  * @param onlineContent The content to display when the device is connected to the internet
  * @param offlineContent The content to display when the device is not connected (optional)
- * @param loadingContent The content to display while checking connectivity (optional)
  */
 @Composable
 fun NetworkAwareContent(
     networkConnectivityObserver: NetworkConnectivityObserver = koinInject(),
     onlineContent: @Composable () -> Unit,
-    offlineContent: (@Composable () -> Unit)? = null,
-    loadingContent: (@Composable () -> Unit)? = null
+    offlineContent: (@Composable () -> Unit)? = null
 ) {
     val networkState by networkConnectivityObserver.observe().collectAsState(
-        initial = NetworkState.Checking
+        initial = NetworkState.Disconnected
     )
 
     when (networkState) {
         is NetworkState.Connected -> onlineContent()
         is NetworkState.Disconnected -> offlineContent?.invoke()
-        is NetworkState.Checking -> loadingContent?.invoke()
     }
 }
 
@@ -39,7 +37,7 @@ fun OnlineContent(
     content: @Composable () -> Unit
 ) {
     val networkState by networkConnectivityObserver.observe().collectAsState(
-        initial = NetworkState.Checking
+        initial = NetworkState.Disconnected
     )
 
     if (networkState is NetworkState.Connected) {
@@ -52,7 +50,7 @@ fun isOnline(
     networkConnectivityObserver: NetworkConnectivityObserver = koinInject()
 ): Boolean {
     val networkState by networkConnectivityObserver.observe().collectAsState(
-        initial = NetworkState.Checking
+        initial = NetworkState.Disconnected
     )
     return networkState is NetworkState.Connected
 }

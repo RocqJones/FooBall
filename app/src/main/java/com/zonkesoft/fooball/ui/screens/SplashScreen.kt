@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -60,18 +59,12 @@ fun SplashScreen(navController: NavHostController) {
                 }
             }
             SplashContent(isOffline = true)
-        },
-        loadingContent = {
-            SplashContent(showNetworkCheck = true,)
         }
     )
 }
 
 @Composable
-private fun SplashContent(
-    isOffline: Boolean = false,
-    showNetworkCheck: Boolean = false
-) {
+private fun SplashContent(isOffline: Boolean = false) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
@@ -90,21 +83,6 @@ private fun SplashContent(
             if (isOffline) {
                 Spacer(modifier = Modifier.height(24.dp))
                 CompactOfflineContent()
-                Spacer(modifier = Modifier.height(24.dp))
-            }
-
-            if (showNetworkCheck) {
-                Spacer(modifier = Modifier.height(24.dp))
-                CircularProgressIndicator(
-                    modifier = Modifier.size(32.dp),
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                TextMedium(
-                    text = stringResource(R.string.checking_connection),
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                )
             }
         }
 
