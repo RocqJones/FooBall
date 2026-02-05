@@ -8,6 +8,17 @@ import com.zonkesoft.fooball.domain.state.NetworkState
 import org.koin.compose.koinInject
 
 /**
+ * Gets the current network state from the observer.
+ */
+private fun NetworkConnectivityObserver.getCurrentState(): NetworkState {
+    return if (isConnected()) {
+        NetworkState.Connected
+    } else {
+        NetworkState.Disconnected
+    }
+}
+
+/**
  * A composable that observes network connectivity and displays different content
  * based on the connection state.
  *
@@ -22,11 +33,7 @@ fun NetworkAwareContent(
     offlineContent: (@Composable () -> Unit)? = null
 ) {
     val networkState by networkConnectivityObserver.observe().collectAsState(
-        initial = if (networkConnectivityObserver.isConnected()) {
-            NetworkState.Connected
-        } else {
-            NetworkState.Disconnected
-        }
+        initial = networkConnectivityObserver.getCurrentState()
     )
 
     when (networkState) {
@@ -41,11 +48,7 @@ fun OnlineContent(
     content: @Composable () -> Unit
 ) {
     val networkState by networkConnectivityObserver.observe().collectAsState(
-        initial = if (networkConnectivityObserver.isConnected()) {
-            NetworkState.Connected
-        } else {
-            NetworkState.Disconnected
-        }
+        initial = networkConnectivityObserver.getCurrentState()
     )
 
     if (networkState is NetworkState.Connected) {
@@ -58,11 +61,7 @@ fun isOnline(
     networkConnectivityObserver: NetworkConnectivityObserver = koinInject()
 ): Boolean {
     val networkState by networkConnectivityObserver.observe().collectAsState(
-        initial = if (networkConnectivityObserver.isConnected()) {
-            NetworkState.Connected
-        } else {
-            NetworkState.Disconnected
-        }
+        initial = networkConnectivityObserver.getCurrentState()
     )
     return networkState is NetworkState.Connected
 }
