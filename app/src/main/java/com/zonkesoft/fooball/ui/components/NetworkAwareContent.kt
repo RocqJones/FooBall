@@ -22,7 +22,11 @@ fun NetworkAwareContent(
     offlineContent: (@Composable () -> Unit)? = null
 ) {
     val networkState by networkConnectivityObserver.observe().collectAsState(
-        initial = NetworkState.Disconnected
+        initial = if (networkConnectivityObserver.isConnected()) {
+            NetworkState.Connected
+        } else {
+            NetworkState.Disconnected
+        }
     )
 
     when (networkState) {
@@ -37,7 +41,11 @@ fun OnlineContent(
     content: @Composable () -> Unit
 ) {
     val networkState by networkConnectivityObserver.observe().collectAsState(
-        initial = NetworkState.Disconnected
+        initial = if (networkConnectivityObserver.isConnected()) {
+            NetworkState.Connected
+        } else {
+            NetworkState.Disconnected
+        }
     )
 
     if (networkState is NetworkState.Connected) {
@@ -50,7 +58,11 @@ fun isOnline(
     networkConnectivityObserver: NetworkConnectivityObserver = koinInject()
 ): Boolean {
     val networkState by networkConnectivityObserver.observe().collectAsState(
-        initial = NetworkState.Disconnected
+        initial = if (networkConnectivityObserver.isConnected()) {
+            NetworkState.Connected
+        } else {
+            NetworkState.Disconnected
+        }
     )
     return networkState is NetworkState.Connected
 }
