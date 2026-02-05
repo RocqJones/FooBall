@@ -14,4 +14,5 @@
     <string name="you_re_offline">You\'re offline!</string>
     <string name="most_of_the_features_will_be_limited_reconnect_and_refresh_to_see_the_content">"Most of the features will be limited, reconnect and refresh to see the content."</string>
     <string name="offline_check_your_connection">Offline - Check your connection!</string>
+    <string name="continue_text">Continue</string>
 </resources>

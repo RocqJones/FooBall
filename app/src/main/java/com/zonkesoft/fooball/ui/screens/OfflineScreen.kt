@@ -13,12 +13,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -27,23 +29,35 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.zonkesoft.fooball.R
 import com.zonkesoft.fooball.domain.state.NetworkState
 import com.zonkesoft.fooball.ui.components.TextBold
 import com.zonkesoft.fooball.ui.components.TextMedium
 import com.zonkesoft.fooball.ui.components.TextRegular
+import com.zonkesoft.fooball.ui.navigation.Screens
 import com.zonkesoft.fooball.ui.viewmodel.OfflineViewModel
 import org.koin.androidx.compose.koinViewModel
 
 /**
  * Screen displayed when the device is offline.
- * Shows connection status and allows user to refresh/retry.
+ * Shows connection status and automatically navigates to HomeScreen when connection is restored.
  */
 @Composable
 fun OfflineScreen(
+    navController: NavHostController,
     viewModel: OfflineViewModel = koinViewModel()
 ) {
     val networkState by viewModel.networkState.collectAsState()
+
+    // Automatically navigate to HomeScreen when connection is restored
+    LaunchedEffect(networkState) {
+        if (networkState is NetworkState.Connected) {
+            navController.navigate(Screens.HomeScreen.route) {
+                popUpTo(Screens.OfflineScreen.route) { inclusive = true }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -58,6 +72,7 @@ fun OfflineScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            // Icon based on state
             AnimatedVisibility(
                 visible = networkState is NetworkState.Disconnected,
                 enter = fadeIn(),
@@ -68,6 +83,19 @@ fun OfflineScreen(
                     contentDescription = stringResource(R.string.no_connection),
                     modifier = Modifier.size(80.dp),
                     tint = MaterialTheme.colorScheme.error
+                )
+            }
+
+            AnimatedVisibility(
+                visible = networkState is NetworkState.Connected,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                Icon(
+                    imageVector = Icons.Default.CheckCircle,
+                    contentDescription = stringResource(R.string.connected),
+                    modifier = Modifier.size(80.dp),
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
 
@@ -101,20 +129,26 @@ fun OfflineScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            Button(
-                onClick = { viewModel.checkNetworkState() },
-                modifier = Modifier.padding(horizontal = 16.dp)
+            AnimatedVisibility(
+                visible = networkState is NetworkState.Disconnected,
+                enter = fadeIn(),
+                exit = fadeOut()
             ) {
-                Icon(
-                    imageVector = Icons.Default.Refresh,
-                    contentDescription = stringResource(R.string.refresh),
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.size(8.dp))
-                TextRegular(
-                    text = stringResource(R.string.retry_connection),
-                    fontSize = 16.sp
-                )
+                Button(
+                    onClick = { viewModel.checkNetworkState() },
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = stringResource(R.string.refresh),
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.size(8.dp))
+                    TextRegular(
+                        text = stringResource(R.string.retry_connection),
+                        fontSize = 16.sp
+                    )
+                }
             }
         }
     }
