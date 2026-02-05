@@ -188,7 +188,8 @@ Pattern 4: Inline Check
 app/src/main/java/com/zonkesoft/fooball/
 │
 ├── domain/
-│   └── NetworkState.kt                   ← Sealed class (Connected/Disconnected/Checking)
+│   └── state/
+│       └── NetworkState.kt               ← Sealed class (Connected/Disconnected/Checking)
 │
 ├── core/utils/
 │   └── NetworkConnectivityObserver.kt    ← Interface + Android implementation
