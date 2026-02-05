@@ -199,7 +199,6 @@ app/src/main/java/com/zonkesoft/fooball/
 │   │
 │   ├── screens/
 │   │   ├── OfflineScreen.kt              ← Full-screen offline UI
-│   │   ├── NetworkDemoScreen.kt          ← Example integration
 │   │   └── HomeScreen.kt                 ← Updated with example
 │   │
 │   └── components/
