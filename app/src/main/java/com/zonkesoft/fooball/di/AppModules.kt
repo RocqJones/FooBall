@@ -1,6 +1,7 @@
 package com.zonkesoft.fooball.di
 
 import com.zonkesoft.fooball.ui.viewmodel.HomeViewModel
+import com.zonkesoft.fooball.ui.viewmodel.OfflineViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -10,6 +11,7 @@ import org.koin.dsl.module
 val appModule = module {
     // ViewModels
     viewModel { HomeViewModel() }
+    viewModel { OfflineViewModel(get()) }
 }
 
 
