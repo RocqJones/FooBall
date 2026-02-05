@@ -36,13 +36,13 @@ class AndroidNetworkConnectivityObserver(
                 trySend(NetworkState.Connected)
             }
 
-            override fun onLosing(network: Network, maxMsToLive: Int) {
-                super.onLosing(network, maxMsToLive)
+            override fun onLost(network: Network) {
+                super.onLost(network)
                 trySend(NetworkState.Disconnected)
             }
 
-            override fun onLost(network: Network) {
-                super.onLost(network)
+            override fun onUnavailable() {
+                super.onUnavailable()
                 trySend(NetworkState.Disconnected)
             }
 
