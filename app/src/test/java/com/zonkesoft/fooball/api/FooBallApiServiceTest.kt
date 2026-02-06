@@ -1,10 +1,8 @@
-package com.zonkesoft.fooball.data_source.remote.api
+package com.zonkesoft.fooball.api
 
 import com.google.gson.Gson
-import com.zonkesoft.fooball.data_source.remote.dto.AnalysisResponse
+import com.zonkesoft.fooball.data_source.remote.api.FooBallApiService
 import com.zonkesoft.fooball.data_source.remote.dto.FixturesIngestResponse
-import com.zonkesoft.fooball.data_source.remote.dto.TodayPredictionsResponse
-import com.zonkesoft.fooball.data_source.remote.dto.TopPicksResponse
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer

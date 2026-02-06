@@ -1,6 +1,8 @@
-package com.zonkesoft.fooball.data_source.remote.dto
+package com.zonkesoft.fooball.dto
 
 import com.google.gson.Gson
+import com.zonkesoft.fooball.data_source.remote.dto.BaseApiResponse
+import com.zonkesoft.fooball.data_source.remote.dto.FixturesIngestResponse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull

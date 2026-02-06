@@ -1,6 +1,9 @@
-package com.zonkesoft.fooball.data_source.remote.dto
+package com.zonkesoft.fooball.dto
 
 import com.google.gson.Gson
+import com.zonkesoft.fooball.data_source.remote.dto.GoalsPredictionDto
+import com.zonkesoft.fooball.data_source.remote.dto.PredictionDto
+import com.zonkesoft.fooball.data_source.remote.dto.TodayPredictionsResponse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull

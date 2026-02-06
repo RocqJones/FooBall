@@ -1,6 +1,12 @@
-package com.zonkesoft.fooball.data_source.remote.dto
+package com.zonkesoft.fooball.dto
 
 import com.google.gson.Gson
+import com.zonkesoft.fooball.data_source.remote.dto.AnalysisResponse
+import com.zonkesoft.fooball.data_source.remote.dto.BestBttsDto
+import com.zonkesoft.fooball.data_source.remote.dto.BestGoalsBetDto
+import com.zonkesoft.fooball.data_source.remote.dto.BestHomeWinDto
+import com.zonkesoft.fooball.data_source.remote.dto.BestValueBetDto
+import com.zonkesoft.fooball.data_source.remote.dto.SummaryDto
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
