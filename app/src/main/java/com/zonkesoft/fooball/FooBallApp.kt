@@ -1,4 +1,4 @@
-package com.zonkesoft.fooball.ui
+package com.zonkesoft.fooball
 
 import android.app.Application
 import com.zonkesoft.fooball.di.appModules

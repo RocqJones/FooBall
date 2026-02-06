@@ -16,11 +16,10 @@ class OfflineViewModel(
     private val networkConnectivityObserver: NetworkConnectivityObserver
 ) : ViewModel() {
 
-    private val _networkState = MutableStateFlow<NetworkState>(
-        if (networkConnectivityObserver.isConnected()) {
-            NetworkState.Connected
-        } else {
-            NetworkState.Disconnected
+    private val _networkState = MutableStateFlow(
+        when {
+            networkConnectivityObserver.isConnected() -> { NetworkState.Connected }
+            else -> { NetworkState.Disconnected }
         }
     )
     val networkState: StateFlow<NetworkState> = _networkState.asStateFlow()
@@ -46,10 +45,9 @@ class OfflineViewModel(
      */
     fun checkNetworkState() {
         val isConnected = networkConnectivityObserver.isConnected()
-        _networkState.value = if (isConnected) {
-            NetworkState.Connected
-        } else {
-            NetworkState.Disconnected
+        _networkState.value = when {
+            isConnected -> { NetworkState.Connected }
+            else -> { NetworkState.Disconnected }
         }
     }
 }
