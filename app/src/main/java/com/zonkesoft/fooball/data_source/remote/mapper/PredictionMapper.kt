@@ -17,11 +17,7 @@ import com.zonkesoft.fooball.domain.model.TopPick
 
 /**
  * Exception thrown when required fields in DTO are null during mapping.
- * 
- * This exception is thrown by mapper functions when critical fields that should never be null
- * are encountered as null in the DTO. The exception is designed to integrate with the existing
- * Result-based error handling pattern in the repository layer, where it will be caught and
- * converted to Result.Error, properly informing the caller about data quality issues.
+ * The exception is designed to integrate with the existing Result-based error handling pattern in the repository layer
  */
 class InvalidDataException(message: String) : IllegalArgumentException(message)
 
