@@ -1,6 +1,7 @@
 package com.zonkesoft.fooball.di
 
 import com.google.gson.GsonBuilder
+import com.zonkesoft.fooball.BuildConfig
 import com.zonkesoft.fooball.core.constants.Constants
 import com.zonkesoft.fooball.data_source.remote.api.FooBallApiService
 import okhttp3.OkHttpClient
@@ -18,7 +19,11 @@ val networkModule = module {
 
     single {
         HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
         }
     }
 
