@@ -2,7 +2,6 @@ package com.zonkesoft.fooball.api
 
 import com.google.gson.Gson
 import com.zonkesoft.fooball.data_source.remote.api.FooBallApiService
-import com.zonkesoft.fooball.data_source.remote.dto.FixturesIngestResponse
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -38,56 +37,6 @@ class FooBallApiServiceTest {
         mockWebServer.shutdown()
     }
 
-    @Test
-    fun `ingestFixtures should return successful response`() = runTest {
-        // Given
-        val mockResponse = FixturesIngestResponse(
-            statusCode = 200,
-            status = "success",
-            message = "Fixtures ingested successfully"
-        )
-        val jsonResponse = gson.toJson(mockResponse)
-
-        mockWebServer.enqueue(
-            MockResponse()
-                .setResponseCode(200)
-                .setBody(jsonResponse)
-                .addHeader("Content-Type", "application/json")
-        )
-
-        // When
-        val response = apiService.ingestFixtures()
-
-        // Then
-        assertTrue(response.isSuccessful)
-        assertNotNull(response.body())
-        assertEquals(200, response.body()?.statusCode)
-        assertEquals("success", response.body()?.status)
-        assertEquals("Fixtures ingested successfully", response.body()?.message)
-
-        // Verify request
-        val request = mockWebServer.takeRequest()
-        assertEquals("/fixtures/ingest", request.path)
-        assertEquals("GET", request.method)
-    }
-
-    @Test
-    fun `ingestFixtures should handle error response`() = runTest {
-        // Given
-        mockWebServer.enqueue(
-            MockResponse()
-                .setResponseCode(500)
-                .setBody("{\"statusCode\":500,\"status\":\"error\",\"message\":\"Internal server error\"}")
-                .addHeader("Content-Type", "application/json")
-        )
-
-        // When
-        val response = apiService.ingestFixtures()
-
-        // Then
-        assertEquals(500, response.code())
-        assertTrue(!response.isSuccessful)
-    }
 
     @Test
     fun `getTodayPredictions should return predictions list`() = runTest {
@@ -163,75 +112,6 @@ class FooBallApiServiceTest {
         assertEquals("GET", request.method)
     }
 
-    @Test
-    fun `getAnalysis should return analysis data`() = runTest {
-        // Given
-        val jsonResponse = """
-            {
-                "statusCode": 200,
-                "status": "success",
-                "message": "Analysis retrieved successfully",
-                "total_predictions": 50,
-                "best_home_wins": [
-                    {
-                        "match": "Team C vs Team D",
-                        "league": "La Liga",
-                        "league_logo": "https://example.com/laliga.png",
-                        "league_flag": "https://example.com/spain.png",
-                        "home_team_logo": "https://example.com/team_c.png",
-                        "away_team_logo": "https://example.com/team_d.png",
-                        "home_win_probability": 0.80,
-                        "home_win_confidence": "very high",
-                        "draw_probability": 0.15,
-                        "away_win_probability": 0.05,
-                        "value_score": 0.90
-                    }
-                ],
-                "best_goals_bets": [],
-                "best_btts": [],
-                "best_value_bets": [],
-                "summary": {
-                    "total_matches": 50,
-                    "high_confidence_home_wins": 15,
-                    "over_2_5_count": 30,
-                    "under_2_5_count": 20,
-                    "avg_home_win_probability": 0.55,
-                    "avg_btts_probability": 0.48,
-                    "high_confidence_goals_bets": 12,
-                    "matches_by_league": {
-                        "Premier League": 15,
-                        "La Liga": 20
-                    }
-                }
-            }
-        """.trimIndent()
-
-        mockWebServer.enqueue(
-            MockResponse()
-                .setResponseCode(200)
-                .setBody(jsonResponse)
-                .addHeader("Content-Type", "application/json")
-        )
-
-        // When
-        val response = apiService.getAnalysis()
-
-        // Then
-        assertTrue(response.isSuccessful)
-        assertNotNull(response.body())
-        assertEquals(200, response.body()?.statusCode)
-        assertEquals("success", response.body()?.status)
-        assertEquals(50, response.body()?.totalPredictions)
-        assertEquals(1, response.body()?.bestHomeWins?.size)
-        assertNotNull(response.body()?.summary)
-        assertEquals(50, response.body()?.summary?.totalMatches)
-        assertEquals(15, response.body()?.summary?.highConfidenceHomeWins)
-
-        // Verify request
-        val request = mockWebServer.takeRequest()
-        assertEquals("/predictions/analysis", request.path)
-        assertEquals("GET", request.method)
-    }
 
     @Test
     fun `getTopPicks should return top picks list`() = runTest {
@@ -330,24 +210,6 @@ class FooBallApiServiceTest {
         assertEquals(null, response.body()?.status)
         assertEquals(null, response.body()?.message)
         assertEquals(null, response.body()?.predictions)
-    }
-
-    @Test
-    fun `API should handle empty response body`() = runTest {
-        // Given
-        mockWebServer.enqueue(
-            MockResponse()
-                .setResponseCode(200)
-                .setBody("{}")
-                .addHeader("Content-Type", "application/json")
-        )
-
-        // When
-        val response = apiService.ingestFixtures()
-
-        // Then
-        assertTrue(response.isSuccessful)
-        assertNotNull(response.body())
     }
 }
 

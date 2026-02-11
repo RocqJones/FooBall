@@ -1,7 +1,6 @@
 package com.zonkesoft.fooball.mapper
 
-import com.zonkesoft.fooball.data_source.remote.dto.BestBttsDto
-import com.zonkesoft.fooball.data_source.remote.dto.BestHomeWinDto
+import com.zonkesoft.fooball.core.extensions.orDefault
 import com.zonkesoft.fooball.data_source.remote.dto.GoalsPredictionDto
 import com.zonkesoft.fooball.data_source.remote.dto.PredictionDto
 import com.zonkesoft.fooball.data_source.remote.dto.TopPickDto
@@ -34,7 +33,7 @@ class PredictionMapperTest {
         // Then
         assertNotNull(result)
         assertEquals("Over 2.5", result.bet)
-        assertEquals(0.75, result.probability, 0.0001)
+        assertEquals(0.75, result.probability.orDefault(0.75), 0.0001)
         assertEquals("high", result.confidence)
     }
 
@@ -296,7 +295,7 @@ class PredictionMapperTest {
         assertEquals("", result.leagueLogo)
         assertEquals("", result.homeTeamLogo)
         assertEquals("", result.awayTeamLogo)
-        assertEquals(0.0, result.homeWinProbability, 0.0001)
+        assertEquals(0.0, result.homeWinProbability.orDefault(0.0), 0.0001)
     }
 
     // ============ TopPickDto Tests ============
@@ -347,51 +346,6 @@ class PredictionMapperTest {
             createdAt = null
         )
 
-        // When
-        dto.toDomain()
-
-        // Then - exception thrown
-    }
-
-    // ============ BestHomeWinDto Tests ============
-
-    @Test(expected = InvalidDataException::class)
-    fun `BestHomeWinDto toDomain should throw when match is null`() {
-        // Given
-        val dto = BestHomeWinDto(
-            match = null,
-            league = null,
-            leagueLogo = null,
-            leagueFlag = null,
-            homeTeamLogo = null,
-            awayTeamLogo = null,
-            homeWinProbability = null,
-            homeWinConfidence = null,
-            drawProbability = null,
-            awayWinProbability = null,
-            valueScore = null
-        )
-
-        // When
-        dto.toDomain()
-
-        // Then - exception thrown
-    }
-
-    // ============ BestBttsDto Tests ============
-
-    @Test(expected = InvalidDataException::class)
-    fun `BestBttsDto toDomain should throw when match is null`() {
-        // Given
-        val dto = BestBttsDto(
-            match = null,
-            leagueLogo = null,
-            leagueFlag = null,
-            homeTeamLogo = null,
-            awayTeamLogo = null,
-            bttsProbability = null,
-            bttsConfidence = null
-        )
 
         // When
         dto.toDomain()

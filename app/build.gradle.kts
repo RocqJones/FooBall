@@ -83,6 +83,10 @@ dependencies {
     // Gson
     implementation(libs.gson)
 
+    // Coil for image loading
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
     // Room - exposed to dependent modules
     api(libs.room.ktx)
 }

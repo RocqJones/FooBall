@@ -17,5 +17,15 @@ object Constants {
         const val READ_TIMEOUT = 30L
         const val WRITE_TIMEOUT = 30L
     }
+
+    /**
+     * API Endpoints
+     */
+    object ApiEndpoints {
+        const val PREDICTIONS_TODAY = "predictions/today"
+        const val TOP_PICKS = "predictions/top-picks"
+        const val COMPETITIONS = "competitions"
+        const val MATCHES = "matches"
+    }
 }
 
