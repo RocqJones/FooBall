@@ -1,122 +1,64 @@
 package com.zonkesoft.fooball.mapper
 
-import com.zonkesoft.fooball.data_source.remote.dto.BestBttsDto
-import com.zonkesoft.fooball.data_source.remote.dto.BestHomeWinDto
-import com.zonkesoft.fooball.data_source.remote.dto.GoalsPredictionDto
-import com.zonkesoft.fooball.data_source.remote.dto.PredictionDto
-import com.zonkesoft.fooball.data_source.remote.dto.TopPickDto
-import com.zonkesoft.fooball.data_source.remote.mapper.InvalidDataException
+import com.zonkesoft.fooball.core.extensions.orDefault
+import com.zonkesoft.fooball.data_source.remote.dto.*
 import com.zonkesoft.fooball.data_source.remote.mapper.toDomain
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Test
 
-/**
- * Tests for the PredictionMapper functions, specifically focusing on
- * InvalidDataException handling for required fields.
- */
 class PredictionMapperTest {
-
-    // ============ GoalsPredictionDto Tests ============
 
     @Test
     fun `GoalsPredictionDto toDomain should succeed with all fields`() {
-        // Given
-        val dto = GoalsPredictionDto(
-            bet = "Over 2.5",
-            probability = 0.75,
-            confidence = "high"
-        )
-
-        // When
+        val dto = GoalsPredictionDto("Over 2.5", 0.75, "high")
         val result = dto.toDomain()
 
-        // Then
         assertNotNull(result)
         assertEquals("Over 2.5", result.bet)
-        assertEquals(0.75, result.probability, 0.0001)
+        assertEquals(0.75, result.probability.orDefault(), 0.0001)
         assertEquals("high", result.confidence)
     }
 
-    @Test(expected = InvalidDataException::class)
-    fun `GoalsPredictionDto toDomain should throw when bet is null`() {
-        // Given
-        val dto = GoalsPredictionDto(
-            bet = null,
-            probability = 0.75,
-            confidence = "high"
-        )
-
-        // When
-        dto.toDomain()
-
-        // Then - exception thrown
-    }
-
-    @Test(expected = InvalidDataException::class)
-    fun `GoalsPredictionDto toDomain should throw when probability is null`() {
-        // Given
-        val dto = GoalsPredictionDto(
-            bet = "Over 2.5",
-            probability = null,
-            confidence = "high"
-        )
-
-        // When
-        dto.toDomain()
-
-        // Then - exception thrown
-    }
-
-    @Test(expected = InvalidDataException::class)
-    fun `GoalsPredictionDto toDomain should throw when confidence is null`() {
-        // Given
-        val dto = GoalsPredictionDto(
-            bet = "Over 2.5",
-            probability = 0.75,
-            confidence = null
-        )
-
-        // When
-        dto.toDomain()
-
-        // Then - exception thrown
-    }
-
-    // ============ PredictionDto Tests ============
-
     @Test
-    fun `PredictionDto toDomain should succeed with required fields`() {
-        // Given
-        val dto = PredictionDto(
-            fixtureId = 1234,
-            match = "Team A vs Team B",
-            league = "Premier League",
-            leagueLogo = "logo.png",
-            leagueFlag = "flag.png",
-            homeTeam = "Team A",
-            homeTeamLogo = "team_a.png",
-            awayTeam = "Team B",
-            awayTeamLogo = "team_b.png",
-            homeWinProbability = 0.65,
-            homeWinConfidence = "high",
-            awayWinProbability = 0.20,
-            awayWinConfidence = "low",
-            drawProbability = 0.15,
-            drawConfidence = "low",
-            predictedOutcome = "home",
-            predictedOutcomeProbability = 0.65,
-            goalsPrediction = null,
-            bttsProbability = 0.55,
-            bttsConfidence = "medium",
-            valueScore = 0.85,
-            createdAt = "2026-02-06T10:00:00Z"
-        )
-
-        // When
+    fun `GoalsPredictionDto toDomain should use defaults when fields are null`() {
+        val dto = GoalsPredictionDto(null, null, null)
         val result = dto.toDomain()
 
-        // Then
+        assertNotNull(result)
+        assertEquals("", result.bet)
+        assertEquals(0.0, result.probability.orDefault(), 0.0001)
+        assertEquals("", result.confidence)
+    }
+
+    @Test
+    fun `PredictionDto toDomain should succeed with all fields`() {
+        val dto = PredictionDto(
+            1234,
+            "Team A vs Team B",
+            "Premier League",
+            "logo.png",
+            "flag.png",
+            "Team A",
+            "team_a.png",
+            "Team B",
+            "team_b.png",
+            0.65,
+            "high",
+            0.20,
+            "low",
+            0.15,
+            "low",
+            "Home Win",
+            0.65,
+            GoalsPredictionDto("Over 2.5", 0.70, "medium"),
+            0.55,
+            "medium",
+            0.85,
+            "2026-02-06T12:00:00Z"
+        )
+        val result = dto.toDomain()
+
         assertNotNull(result)
         assertEquals(1234, result.fixtureId)
         assertEquals("Team A vs Team B", result.match)
@@ -124,326 +66,63 @@ class PredictionMapperTest {
         assertEquals("Team B", result.awayTeam)
     }
 
-    @Test(expected = InvalidDataException::class)
-    fun `PredictionDto toDomain should throw when fixtureId is null`() {
-        // Given
-        val dto = PredictionDto(
-            fixtureId = null,
-            match = "Team A vs Team B",
-            league = null,
-            leagueLogo = null,
-            leagueFlag = null,
-            homeTeam = "Team A",
-            homeTeamLogo = null,
-            awayTeam = "Team B",
-            awayTeamLogo = null,
-            homeWinProbability = null,
-            homeWinConfidence = null,
-            awayWinProbability = null,
-            awayWinConfidence = null,
-            drawProbability = null,
-            drawConfidence = null,
-            predictedOutcome = null,
-            predictedOutcomeProbability = null,
-            goalsPrediction = null,
-            bttsProbability = null,
-            bttsConfidence = null,
-            valueScore = null,
-            createdAt = null
-        )
-
-        // When
-        dto.toDomain()
-
-        // Then - exception thrown
-    }
-
-    @Test(expected = InvalidDataException::class)
-    fun `PredictionDto toDomain should throw when match is null`() {
-        // Given
-        val dto = PredictionDto(
-            fixtureId = 1234,
-            match = null,
-            league = null,
-            leagueLogo = null,
-            leagueFlag = null,
-            homeTeam = "Team A",
-            homeTeamLogo = null,
-            awayTeam = "Team B",
-            awayTeamLogo = null,
-            homeWinProbability = null,
-            homeWinConfidence = null,
-            awayWinProbability = null,
-            awayWinConfidence = null,
-            drawProbability = null,
-            drawConfidence = null,
-            predictedOutcome = null,
-            predictedOutcomeProbability = null,
-            goalsPrediction = null,
-            bttsProbability = null,
-            bttsConfidence = null,
-            valueScore = null,
-            createdAt = null
-        )
-
-        // When
-        dto.toDomain()
-
-        // Then - exception thrown
-    }
-
-    @Test(expected = InvalidDataException::class)
-    fun `PredictionDto toDomain should throw when homeTeam is null`() {
-        // Given
-        val dto = PredictionDto(
-            fixtureId = 1234,
-            match = "Team A vs Team B",
-            league = null,
-            leagueLogo = null,
-            leagueFlag = null,
-            homeTeam = null,
-            homeTeamLogo = null,
-            awayTeam = "Team B",
-            awayTeamLogo = null,
-            homeWinProbability = null,
-            homeWinConfidence = null,
-            awayWinProbability = null,
-            awayWinConfidence = null,
-            drawProbability = null,
-            drawConfidence = null,
-            predictedOutcome = null,
-            predictedOutcomeProbability = null,
-            goalsPrediction = null,
-            bttsProbability = null,
-            bttsConfidence = null,
-            valueScore = null,
-            createdAt = null
-        )
-
-        // When
-        dto.toDomain()
-
-        // Then - exception thrown
-    }
-
-    @Test(expected = InvalidDataException::class)
-    fun `PredictionDto toDomain should throw when awayTeam is null`() {
-        // Given
-        val dto = PredictionDto(
-            fixtureId = 1234,
-            match = "Team A vs Team B",
-            league = null,
-            leagueLogo = null,
-            leagueFlag = null,
-            homeTeam = "Team A",
-            homeTeamLogo = null,
-            awayTeam = null,
-            awayTeamLogo = null,
-            homeWinProbability = null,
-            homeWinConfidence = null,
-            awayWinProbability = null,
-            awayWinConfidence = null,
-            drawProbability = null,
-            drawConfidence = null,
-            predictedOutcome = null,
-            predictedOutcomeProbability = null,
-            goalsPrediction = null,
-            bttsProbability = null,
-            bttsConfidence = null,
-            valueScore = null,
-            createdAt = null
-        )
-
-        // When
-        dto.toDomain()
-
-        // Then - exception thrown
-    }
-
     @Test
-    fun `PredictionDto toDomain should use empty string for nullable non-required fields`() {
-        // Given
+    fun `PredictionDto toDomain should use defaults when fields are null`() {
         val dto = PredictionDto(
-            fixtureId = 1234,
-            match = "Team A vs Team B",
-            league = null,
-            leagueLogo = null,
-            leagueFlag = null,
-            homeTeam = "Team A",
-            homeTeamLogo = null,
-            awayTeam = "Team B",
-            awayTeamLogo = null,
-            homeWinProbability = null,
-            homeWinConfidence = null,
-            awayWinProbability = null,
-            awayWinConfidence = null,
-            drawProbability = null,
-            drawConfidence = null,
-            predictedOutcome = null,
-            predictedOutcomeProbability = null,
-            goalsPrediction = null,
-            bttsProbability = null,
-            bttsConfidence = null,
-            valueScore = null,
-            createdAt = null
+            null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null,
+            null, null, null, null
         )
-
-        // When
         val result = dto.toDomain()
 
-        // Then - Uses defaults for optional fields
-        assertEquals("", result.league)
-        assertEquals("", result.leagueLogo)
-        assertEquals("", result.homeTeamLogo)
-        assertEquals("", result.awayTeamLogo)
-        assertEquals(0.0, result.homeWinProbability, 0.0001)
-    }
-
-    // ============ TopPickDto Tests ============
-
-    @Test(expected = InvalidDataException::class)
-    fun `TopPickDto toDomain should throw when fixtureId is null`() {
-        // Given
-        val dto = TopPickDto(
-            fixtureId = null,
-            match = "Team C vs Team D",
-            league = null,
-            leagueLogo = null,
-            leagueFlag = null,
-            homeTeamLogo = null,
-            awayTeamLogo = null,
-            homeWinProbability = null,
-            drawProbability = null,
-            awayWinProbability = null,
-            goalsPrediction = null,
-            bttsProbability = null,
-            compositeScore = null,
-            createdAt = null
-        )
-
-        // When
-        dto.toDomain()
-
-        // Then - exception thrown
-    }
-
-    @Test(expected = InvalidDataException::class)
-    fun `TopPickDto toDomain should throw when match is null`() {
-        // Given
-        val dto = TopPickDto(
-            fixtureId = 5678,
-            match = null,
-            league = null,
-            leagueLogo = null,
-            leagueFlag = null,
-            homeTeamLogo = null,
-            awayTeamLogo = null,
-            homeWinProbability = null,
-            drawProbability = null,
-            awayWinProbability = null,
-            goalsPrediction = null,
-            bttsProbability = null,
-            compositeScore = null,
-            createdAt = null
-        )
-
-        // When
-        dto.toDomain()
-
-        // Then - exception thrown
-    }
-
-    // ============ BestHomeWinDto Tests ============
-
-    @Test(expected = InvalidDataException::class)
-    fun `BestHomeWinDto toDomain should throw when match is null`() {
-        // Given
-        val dto = BestHomeWinDto(
-            match = null,
-            league = null,
-            leagueLogo = null,
-            leagueFlag = null,
-            homeTeamLogo = null,
-            awayTeamLogo = null,
-            homeWinProbability = null,
-            homeWinConfidence = null,
-            drawProbability = null,
-            awayWinProbability = null,
-            valueScore = null
-        )
-
-        // When
-        dto.toDomain()
-
-        // Then - exception thrown
-    }
-
-    // ============ BestBttsDto Tests ============
-
-    @Test(expected = InvalidDataException::class)
-    fun `BestBttsDto toDomain should throw when match is null`() {
-        // Given
-        val dto = BestBttsDto(
-            match = null,
-            leagueLogo = null,
-            leagueFlag = null,
-            homeTeamLogo = null,
-            awayTeamLogo = null,
-            bttsProbability = null,
-            bttsConfidence = null
-        )
-
-        // When
-        dto.toDomain()
-
-        // Then - exception thrown
-    }
-
-    // ============ Exception Message Tests ============
-
-    @Test
-    fun `InvalidDataException should have descriptive message for fixtureId`() {
-        // Given
-        val dto = PredictionDto(
-            fixtureId = null,
-            match = "Test",
-            league = null,
-            leagueLogo = null,
-            leagueFlag = null,
-            homeTeam = "A",
-            homeTeamLogo = null,
-            awayTeam = "B",
-            awayTeamLogo = null,
-            homeWinProbability = null,
-            homeWinConfidence = null,
-            awayWinProbability = null,
-            awayWinConfidence = null,
-            drawProbability = null,
-            drawConfidence = null,
-            predictedOutcome = null,
-            predictedOutcomeProbability = null,
-            goalsPrediction = null,
-            bttsProbability = null,
-            bttsConfidence = null,
-            valueScore = null,
-            createdAt = null
-        )
-
-        // When & Then
-        try {
-            dto.toDomain()
-        } catch (e: InvalidDataException) {
-            assertEquals("PredictionDto.fixtureId cannot be null", e.message)
-        }
+        assertNotNull(result)
+        assertEquals(0, result.fixtureId)
+        assertEquals("", result.match)
+        assertEquals("", result.homeTeam)
+        assertEquals("", result.awayTeam)
+        assertEquals(0.0, result.homeWinProbability.orDefault(), 0.0001)
     }
 
     @Test
-    fun `InvalidDataException should be IllegalArgumentException subclass`() {
-        // Given
-        val exception = InvalidDataException("test")
+    fun `TopPickDto toDomain should succeed with all fields`() {
+        val dto = TopPickDto(
+            5678,
+            "Team C vs Team D",
+            "Serie A",
+            "logo.png",
+            "flag.png",
+            "team_c.png",
+            "team_d.png",
+            0.72,
+            0.18,
+            0.10,
+            GoalsPredictionDto("Over 3.5", 0.68, "high"),
+            0.60,
+            0.88,
+            "2026-02-06T12:00:00Z"
+        )
+        val result = dto.toDomain()
 
-        // Then
-        assert(exception is IllegalArgumentException)
+        assertNotNull(result)
+        assertEquals(5678, result.fixtureId)
+        assertEquals("Team C vs Team D", result.match)
+        assertEquals(0.72, result.homeWinProbability.orDefault(), 0.0001)
+        assertEquals(0.88, result.compositeScore.orDefault(), 0.0001)
+    }
+
+    @Test
+    fun `TopPickDto toDomain should use defaults when fields are null`() {
+        val dto = TopPickDto(
+            null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null
+        )
+        val result = dto.toDomain()
+
+        assertNotNull(result)
+        assertEquals(0, result.fixtureId)
+        assertEquals("", result.match)
+        assertEquals(0.0, result.homeWinProbability.orDefault(), 0.0001)
+        assertEquals(0.0, result.compositeScore.orDefault(), 0.0001)
     }
 }
 
